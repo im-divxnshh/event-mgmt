@@ -12,14 +12,21 @@ import { FiLogOut, FiCalendar, FiClipboard } from 'react-icons/fi';
 const BookEvent = dynamic(() => import('@/components/user/BookEvent'));
 const EventManager = dynamic(() => import('@/components/user/EventManager'));
 
+// Define proper interface for user data
+interface UserData {
+  name: string;
+  email?: string;
+  // Add more fields if required
+}
+
 interface DashboardPageProps {
-  params: Promise<{ uid: string }>; // Next.js 15 style
+  params: Promise<{ uid: string }>; // For Next.js 15 `use()` usage
 }
 
 export default function DashboardPage(props: DashboardPageProps) {
-  const { uid } = use(props.params); // Unwrap params using `use()`
+  const { uid } = use(props.params); // Unwrap params using use()
   const [activeTab, setActiveTab] = useState<'book' | 'manager'>('book');
-  const [userData, setUserData] = useState<any>(null);
+  const [userData, setUserData] = useState<UserData | null>(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -28,13 +35,19 @@ export default function DashboardPage(props: DashboardPageProps) {
       if (!docSnap.exists()) {
         notFound();
       } else {
-        setUserData(docSnap.data());
+        setUserData(docSnap.data() as UserData);
       }
     };
     fetchData();
   }, [uid]);
 
-  if (!userData) return <div className="p-10 text-center text-lg">Loading your dashboard...</div>;
+  if (!userData) {
+    return (
+      <div className="p-10 text-center text-lg">
+        Loading your dashboard...
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col">

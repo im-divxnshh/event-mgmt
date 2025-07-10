@@ -3,6 +3,7 @@
 import { TypeAnimation } from 'react-type-animation';
 import Navbar from '@/components/Navbar';
 import Image from 'next/image';
+import Link from 'next/link';
 
 
 
@@ -52,12 +53,12 @@ const LandingPage = () => {
             </p>
 
             <div className="flex space-x-4">
-              <a
+              <Link
                 href="/#events"
                 className="inline-block px-6 py-3 bg-blue-600 text-white rounded-2xl shadow hover:bg-blue-700 transition"
               >
                 Explore Events
-              </a>
+              </Link>
 
 
             </div>
