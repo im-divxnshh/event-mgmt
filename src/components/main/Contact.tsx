@@ -94,7 +94,7 @@ export default function Contact() {
               <MapPin className="w-6 h-6 text-blue-500" />
               <div>
                 <h4 className="font-semibold text-white">Office</h4>
-                <p className="text-gray-400 text-sm">XYZ, XYZ, XX, YY - 243001</p>
+                <p className="text-gray-400 text-sm">Bareilly, Uttar Pradesh - 243001</p>
               </div>
             </div>
           </motion.div>
