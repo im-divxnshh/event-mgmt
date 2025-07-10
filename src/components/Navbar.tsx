@@ -32,6 +32,9 @@ const Navbar = () => {
     const navItems = [
         { label: 'Home', href: '#home' },
         { label: 'Events', href: '#events' },
+        
+        { label: 'Events Recape', href: '#eventschedular' },
+        { label: 'Testimonials', href: '#testimonials' },
         { label: 'About', href: '#about' },
         { label: 'Contact', href: '#contact' },
     ];
@@ -127,41 +130,41 @@ const Navbar = () => {
             setPassword('');
             setName('');
             setShowPassword(false);
-       } catch (error: unknown) {
-    const errorCode = (error as { code?: string })?.code || 'unknown-error';
+        } catch (error: unknown) {
+            const errorCode = (error as { code?: string })?.code || 'unknown-error';
 
-    Swal.fire({
-        icon: 'error',
-        title: 'Oops!',
-        text: getFriendlyMessage(errorCode),
-    });
-}
-    };
-
-  useEffect(() => {
-    const handleScroll = () => {
-        const sections = navItems.map((item) =>
-            document.querySelector(item.href) as HTMLElement | null
-        );
-
-        const scrollPos = window.scrollY + 100;
-
-        for (let i = 0; i < sections.length; i++) {
-            const section = sections[i];
-            if (
-                section &&
-                section.offsetTop <= scrollPos &&
-                section.offsetTop + section.clientHeight > scrollPos
-            ) {
-                setActiveNav(navItems[i].href);
-                break;
-            }
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops!',
+                text: getFriendlyMessage(errorCode),
+            });
         }
     };
 
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-}, []);
+    useEffect(() => {
+        const handleScroll = () => {
+            const sections = navItems.map((item) =>
+                document.querySelector(item.href) as HTMLElement | null
+            );
+
+            const scrollPos = window.scrollY + 100;
+
+            for (let i = 0; i < sections.length; i++) {
+                const section = sections[i];
+                if (
+                    section &&
+                    section.offsetTop <= scrollPos &&
+                    section.offsetTop + section.clientHeight > scrollPos
+                ) {
+                    setActiveNav(navItems[i].href);
+                    break;
+                }
+            }
+        };
+
+        window.addEventListener('scroll', handleScroll);
+        return () => window.removeEventListener('scroll', handleScroll);
+    }, []);
 
 
     return (
@@ -192,7 +195,7 @@ const Navbar = () => {
 
                         {user ? (
                             <div className="flex items-center space-x-4">
-                                <Link href="/dashboard" className="text-gray-600 hover:text-blue-600 cursor-pointer">
+                                <Link href={`/dashboard/${user?.uid}`} className="text-gray-600 hover:text-blue-600 cursor-pointer">
                                     Dashboard
                                 </Link>
                                 <button
@@ -267,12 +270,13 @@ const Navbar = () => {
                                 {user ? (
                                     <>
                                         <Link
-                                            href="/dashboard"
+                                            href={`/dashboard/${user?.uid}`}
                                             onClick={() => setMenuOpen(false)}
                                             className="text-gray-700 hover:text-blue-600"
                                         >
                                             Dashboard
                                         </Link>
+
                                         <button
                                             onClick={() => {
                                                 logoutUser();

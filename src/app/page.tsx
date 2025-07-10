@@ -9,6 +9,9 @@ import Image from 'next/image';
 import Event from "@/components/main/Event";
 import About from '@/components/main/About';
 import Contact from '@/components/main/Contact';
+import Testimonials from '@/components/main/Testimonials';
+import EventSchedular from '@/components/main/EventSchedular';
+
 
 import Image1 from "../../public/assets/1.jpg";
 
@@ -49,12 +52,14 @@ const LandingPage = () => {
             </p>
 
             <div className="flex space-x-4">
-              <button className="px-6 py-3 bg-blue-600 text-white rounded-2xl shadow hover:bg-blue-700 transition">
+              <a
+                href="/#events"
+                className="inline-block px-6 py-3 bg-blue-600 text-white rounded-2xl shadow hover:bg-blue-700 transition"
+              >
                 Explore Events
-              </button>
-              <button className="px-6 py-3 border border-blue-600 text-blue-600 rounded-2xl hover:bg-blue-50 transition">
-                Create Event
-              </button>
+              </a>
+
+
             </div>
           </div>
 
@@ -71,6 +76,14 @@ const LandingPage = () => {
 
       <section id="events">
         <Event />
+      </section>
+
+      <section id="eventschedular">
+        <EventSchedular />
+      </section>
+
+      <section id="testimonials">
+        <Testimonials />
       </section>
 
       <section id="about">

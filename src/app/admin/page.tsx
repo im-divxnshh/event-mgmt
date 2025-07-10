@@ -12,7 +12,7 @@ import {
   ref, uploadBytesResumable, getDownloadURL, deleteObject
 } from 'firebase/storage'
 import {
-  collection, addDoc, updateDoc,Timestamp, doc, deleteDoc, query, orderBy, writeBatch, onSnapshot
+  collection, addDoc, updateDoc, Timestamp, getDocs,doc, deleteDoc, query, orderBy, writeBatch, onSnapshot
 } from 'firebase/firestore'
 import { storage, db } from '@/utils/firebase'
 import { UploadCloud, Loader2, Trash2, Pencil, Eye, EyeOff, Move } from 'lucide-react'
@@ -33,6 +33,16 @@ type Message = {
   message: string
   timestamp?: Timestamp
 }
+
+type Event = {
+  id: string;
+  userId: string;
+  title: string;
+  description: string;
+  date: string;
+  location: string;
+};
+
 
 
 function SortableItem({ item, onToggle, onEdit, onDelete }: {
@@ -83,7 +93,8 @@ export default function AdminPanel() {
   const emojis = ['🦄', '🍕', '👾', '🎯', '🧃', '🍉', '🧁', '🪩', '🐸', '🤹‍♀️']
   const [showMessages, setShowMessages] = useState(false)
   const [messages, setMessages] = useState<Message[]>([])
-
+  const [showEvents, setShowEvents] = useState(false);
+  const [userEvents, setUserEvents] = useState<Event[]>([]);
   const sensors = useSensors(useSensor(PointerSensor))
   console.log(progress)
   useEffect(() => {
@@ -107,6 +118,52 @@ export default function AdminPanel() {
     })
     return () => unsub()
   }, [showMessages])
+
+  useEffect(() => {
+    if (!showEvents) return;
+
+    const fetchAllUserEvents = async () => {
+      const usersSnap = await getDocs(collection(db, 'users'));
+      const allEvents: Event[] = [];
+
+      for (const userDoc of usersSnap.docs) {
+        const userId = userDoc.id;
+        const eventsSnap = await getDocs(collection(db, 'users', userId, 'events'));
+
+        eventsSnap.forEach(eventDoc => {
+          const data = eventDoc.data();
+          allEvents.push({
+            id: eventDoc.id,
+            userId,
+            title: data.title,
+            description: data.description,
+            date: data.date,
+            location: data.location,
+          });
+        });
+      }
+
+      setUserEvents(allEvents);
+    };
+
+    fetchAllUserEvents();
+  }, [showEvents]);
+
+
+  const deleteUserEvent = async (userId: string, eventId: string) => {
+    const res = await Swal.fire({
+      title: 'Delete this event?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#d33',
+      confirmButtonText: 'Delete',
+    });
+    if (!res.isConfirmed) return;
+    await deleteDoc(doc(db, 'users', userId, 'events', eventId));
+    setUserEvents(prev => prev.filter(e => e.id !== eventId || e.userId !== userId));
+    Swal.fire('Deleted!', '', 'success');
+  };
+
 
   const DeleteMessage = async (id: string) => {
     const res = await Swal.fire({
@@ -192,14 +249,21 @@ export default function AdminPanel() {
   return (
     <div className="min-h-screen p-10 bg-gradient-to-br from-black via-zinc-950 to-zinc-900 text-white space-y-10 font-sans">
       <h1 className='text-4xl font-bold underline'>Admin Panel</h1>
-      <div className="flex justify-end">
+      <div className="flex justify-end gap-4">
         <button
           onClick={() => setShowMessages(true)}
           className="bg-zinc-800 border border-zinc-700 px-4 py-2 rounded-xl text-white hover:bg-zinc-700 transition"
         >
           📬 View Messages
         </button>
+        <button
+          onClick={() => setShowEvents(true)}
+          className="bg-zinc-800 border border-zinc-700 px-4 py-2 rounded-xl text-white hover:bg-zinc-700 transition"
+        >
+          📅 View Events
+        </button>
       </div>
+
       <div className="flex flex-wrap gap-4 bg-white/5 backdrop-blur p-6 rounded-2xl border border-zinc-700 shadow-md">
         <select value={tab} onChange={e => setTab(e.target.value as 'photo' | 'video')} className="bg-zinc-900 border border-zinc-700 text-sm rounded-xl px-3 py-2 text-white focus:ring-cyan-500">
           <option value="photo">📸 Photo</option>
@@ -260,6 +324,51 @@ export default function AdminPanel() {
                   </div>
                 </div>
               ))
+            )}
+          </div>
+        </div>
+      )}
+
+
+      {showEvents && (
+        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="bg-zinc-900 border border-zinc-700 rounded-2xl w-full max-w-5xl max-h-[90vh] overflow-y-auto p-6 space-y-6 relative shadow-xl">
+            <button
+              onClick={() => setShowEvents(false)}
+              className="absolute top-4 right-4 text-zinc-400 hover:text-white transition"
+            >
+              <X size={20} />
+            </button>
+            <h2 className="text-2xl font-bold text-white mb-4">📅 All User Events</h2>
+
+            {userEvents.length === 0 ? (
+              <p className="text-zinc-400 text-sm">No events found.</p>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {userEvents.map(event => (
+                  <div
+                    key={`${event.userId}-${event.id}`}
+                    className="bg-white/5 border border-zinc-700 rounded-xl p-5 shadow hover:shadow-lg transition hover:scale-[1.02]"
+                  >
+                    <div className="flex justify-between items-center">
+                      <h3 className="text-lg font-bold text-cyan-400">{event.title}</h3>
+                      <button
+                        onClick={() => deleteUserEvent(event.userId, event.id)}
+                        className="text-red-500 hover:text-red-600"
+                        title="Delete Event"
+                      >
+                        <Trash2 size={18} />
+                      </button>
+                    </div>
+                    <p className="text-zinc-300 text-sm mt-2">{event.description}</p>
+                    <div className="text-xs text-zinc-400 mt-4 space-y-1">
+                      <div>📍 Location: {event.location}</div>
+                      <div>📆 Date: {event.date}</div>
+                      <div>👤 User ID: <code>{event.userId}</code></div>
+                    </div>
+                  </div>
+                ))}
+              </div>
             )}
           </div>
         </div>
