@@ -3,12 +3,14 @@
 import { TypeAnimation } from 'react-type-animation';
 import Navbar from '@/components/Navbar';
 import Image from 'next/image';
-import Image1 from '../../public/assets/images/2.jpg';
+
 
 
 import Event from "@/components/main/Event";
 import About from '@/components/main/About';
 import Contact from '@/components/main/Contact';
+
+import Image1 from "../../public/assets/1.jpg";
 
 const LandingPage = () => {
 
@@ -42,9 +44,10 @@ const LandingPage = () => {
               repeat={Infinity}
             />
             <p className="text-gray-600 text-lg">
-              Eventify helps you create, explore, and manage events with ease. Whether you're
-              organizing a seminar or attending a concert — it's all possible here.
+              Eventify helps you create, explore, and manage events with ease. Whether you&rsquo;re
+              organizing a seminar or attending a concert — it&rsquo;s all possible here.
             </p>
+
             <div className="flex space-x-4">
               <button className="px-6 py-3 bg-blue-600 text-white rounded-2xl shadow hover:bg-blue-700 transition">
                 Explore Events

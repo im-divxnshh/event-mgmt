@@ -7,9 +7,7 @@ import { collection, addDoc, serverTimestamp } from 'firebase/firestore'
 import Swal from 'sweetalert2'
 import { db } from '@/utils/firebase' 
 
-type Props = {}
-
-export default function Contact({}: Props) {
+export default function Contact() {
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -31,11 +29,10 @@ export default function Contact({}: Props) {
       Swal.fire({
         icon: 'success',
         title: 'Message Sent!',
-        text: 'Thanks for reaching out. We’ll get back to you shortly.',
+        text: 'Thanks for reaching out. We&rsquo;ll get back to you shortly.',
         confirmButtonColor: '#3b82f6',
       })
 
-      // Reset form
       setFormData({ name: '', email: '', message: '' })
     } catch (error) {
       Swal.fire({
@@ -54,6 +51,7 @@ export default function Contact({}: Props) {
       className="min-h-screen bg-gradient-to-b from-[#1a1a1a] to-[#0f0f0f] text-white py-20 px-6 sm:px-12"
     >
       <div className="max-w-6xl mx-auto">
+        {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -65,7 +63,7 @@ export default function Contact({}: Props) {
             Contact <span className="text-blue-500">Us</span>
           </h2>
           <p className="text-gray-400 text-lg max-w-2xl mx-auto">
-            Have questions, feedback, or need assistance? Reach out to us and we'll be happy to help.
+            Have questions, feedback, or need assistance? Reach out to us and we&rsquo;ll be happy to help.
           </p>
         </motion.div>
 

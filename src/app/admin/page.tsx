@@ -12,7 +12,7 @@ import {
   ref, uploadBytesResumable, getDownloadURL, deleteObject
 } from 'firebase/storage'
 import {
-  collection, addDoc, updateDoc, doc, deleteDoc, query, orderBy, writeBatch, onSnapshot
+  collection, addDoc, updateDoc,Timestamp, doc, deleteDoc, query, orderBy, writeBatch, onSnapshot
 } from 'firebase/firestore'
 import { storage, db } from '@/utils/firebase'
 import { UploadCloud, Loader2, Trash2, Pencil, Eye, EyeOff, Move } from 'lucide-react'
@@ -31,7 +31,7 @@ type Message = {
   name: string
   email: string
   message: string
-  timestamp?: any
+  timestamp?: Timestamp
 }
 
 
@@ -85,7 +85,7 @@ export default function AdminPanel() {
   const [messages, setMessages] = useState<Message[]>([])
 
   const sensors = useSensors(useSensor(PointerSensor))
-
+  console.log(progress)
   useEffect(() => {
     const q = query(collection(db, tab), orderBy('position'))
     const unsub = onSnapshot(q, (snap) => {

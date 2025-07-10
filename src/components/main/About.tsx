@@ -2,9 +2,7 @@
 
 import React from 'react'
 import { motion } from 'framer-motion'
-import { CalendarHeart, Users, MapPin, Sparkles, Layers3 } from 'lucide-react'
-
-type Props = {}
+import { CalendarHeart, Users, MapPin, Sparkles, Layers3, Bell } from 'lucide-react'
 
 const features = [
   {
@@ -32,11 +30,19 @@ const features = [
     title: 'Seamless Dashboard',
     description: 'Intuitive admin panel to track events, participants, and statistics with ease.',
   },
+  {
+    icon: Bell,
+    title: 'Real-Time Notifications',
+    description: 'Stay informed with live updates about your events and attendee activity.',
+  },
 ]
 
-export default function About({}: Props) {
+export default function About() {
   return (
-    <section id="about" className="min-h-screen bg-gradient-to-b from-[#0f0f0f] to-[#1a1a1a] text-white py-20 px-6 sm:px-12">
+    <section
+      id="about"
+      className="min-h-screen bg-gradient-to-b from-[#0f0f0f] to-[#1a1a1a] text-white py-20 px-6 sm:px-12"
+    >
       <div className="max-w-6xl mx-auto space-y-14">
         {/* Header */}
         <motion.div
@@ -46,9 +52,12 @@ export default function About({}: Props) {
           viewport={{ once: true }}
           className="text-center"
         >
-          <h2 className="text-4xl sm:text-5xl font-extrabold text-white mb-4">About <span className="text-blue-500">Eventify</span></h2>
+          <h2 className="text-4xl sm:text-5xl font-extrabold text-white mb-4">
+            About <span className="text-blue-500">Eventify</span>
+          </h2>
           <p className="text-gray-400 max-w-2xl mx-auto text-lg">
-            Eventify is a dynamic platform empowering you to host, manage, and discover events like never before. Whether it's a tech conference, music show, or community fest — we’ve got you covered.
+            Eventify is a dynamic platform empowering you to host, manage, and discover events like never before.
+            Whether it&rsquo;s a tech conference, music show, or community fest &mdash; we&rsquo;ve got you covered.
           </p>
         </motion.div>
 
@@ -82,7 +91,9 @@ export default function About({}: Props) {
           className="text-center pt-10"
         >
           <h3 className="text-2xl font-semibold mb-4">Ready to create your next big event?</h3>
-         
+          <p className="text-gray-400">
+            Join Eventify today and bring your ideas to life with the power of our event platform.
+          </p>
         </motion.div>
       </div>
     </section>

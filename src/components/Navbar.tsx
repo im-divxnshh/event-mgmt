@@ -103,6 +103,7 @@ const Navbar = () => {
         try {
             if (isRegistering) {
                 const userCred = await registerUser(email, password, name);
+                console.log(userCred)
                 Swal.fire({
                     icon: 'success',
                     title: 'Welcome aboard!',
@@ -126,13 +127,15 @@ const Navbar = () => {
             setPassword('');
             setName('');
             setShowPassword(false);
-        } catch (error: any) {
-            Swal.fire({
-                icon: 'error',
-                title: 'Oops!',
-                text: getFriendlyMessage(error?.code || 'unknown-error'),
-            });
-        }
+       } catch (error: unknown) {
+    const errorCode = (error as { code?: string })?.code || 'unknown-error';
+
+    Swal.fire({
+        icon: 'error',
+        title: 'Oops!',
+        text: getFriendlyMessage(errorCode),
+    });
+}
     };
 
   useEffect(() => {
